@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wedding Video</title>
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+
+      video {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        object-fit: contain;
+      }
+
+      button {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 2;
+        padding: 14px 24px;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #111;
+        cursor: pointer;
+        font: 600 16px Arial, sans-serif;
+        transform: translate(-50%, -50%);
+      }
+
+      button[hidden] { display: none; }
+    </style>
+  </head>
+  <body>
+    <video id="wedding-video" controls autoplay preload="auto">
+      <source src="img/vid1.mp4" type="video/mp4" />
+      Your browser does not support HTML video.
+    </video>
+    <button id="play-button" type="button" hidden>Play fullscreen with sound</button>
+
+    <script>
+      const video = document.getElementById("wedding-video");
+      const playButton = document.getElementById("play-button");
+
+      async function playFullscreen() {
+        video.muted = false;
+        video.volume = 1;
+
+        try {
+          await video.play();
+        } catch (_) {
+          playButton.hidden = false;
+          return;
+        }
+
+        playButton.hidden = true;
+        const openFullscreen =
+          video.requestFullscreen?.bind(video) ||
+          video.webkitRequestFullscreen?.bind(video) ||
+          video.webkitEnterFullscreen?.bind(video);
+
+        if (openFullscreen) {
+          try { await openFullscreen(); } catch (_) {}
+        }
+      }
+
+      playButton.addEventListener("click", playFullscreen);
+      window.addEventListener("load", playFullscreen);
+    </script>
+  </body>
+</html>
